@@ -164,7 +164,7 @@
     <br>
     <div id="DadosAab" class="container"> 
       <h1 id="AEVMEDS">ABAIXO ESTÃO OS DADOS DA ESTAÇÃO NA DATA {{ datacompleta }}. 
-       <form method="post" action="/">
+       <form method="post" action="{% url 'home' %}">
          {% csrf_token %}
             <button id="VoltarBotao" type="submit">VOLTAR</button>
         </form>
@@ -237,4 +237,5 @@
   </div>
   {% endif %}
     </body>
+
 </html>

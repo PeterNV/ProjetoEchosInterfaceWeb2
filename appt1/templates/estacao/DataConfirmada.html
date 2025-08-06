@@ -17,7 +17,7 @@
        
             }
 
-            #AEVMEDS{
+            #AEVMEDS{'
                 text-align: center;
                 color: white;
                 filter: drop-shadow(1px 1px 1px black);
@@ -164,7 +164,7 @@
     <br>
     <div id="DadosAab" class="container"> 
       <h1 id="AEVMEDS">ABAIXO ESTÃO OS DADOS DA ESTAÇÃO NA DATA {{ datacompleta }}. 
-       <form method="post" action="{% url 'home' %}">
+       <form method="post" action="{% url '' %}">
          {% csrf_token %}
             <button id="VoltarBotao" type="submit">VOLTAR</button>
         </form>
@@ -239,3 +239,4 @@
     </body>
 
 </html>
+

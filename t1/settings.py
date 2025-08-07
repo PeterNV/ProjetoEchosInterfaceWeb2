@@ -24,7 +24,7 @@ GDAL_LIBRARY_PATH = 'C:/Users/Usuário/Downloads/gdal-3.7.3'
 SECRET_KEY = 'django-insecure-b6*vzhl3iaxu20(7yugi0mx_8er064d(t*bts*8ehibbq$n)ns'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
@@ -142,4 +142,5 @@ STATIC_URL = 'static/'
 #EMAIL_HOST_USER = 'echosifpe@gmail.com'
 #EMAIL_HOST_PASSWORD = 'rirs trob tana bbay'  # App Password gerado
 #DEFAULT_FROM_EMAIL = 'echosifpe@gmail.com'
+
 #SERVER_EMAIL = 'echosifpe@gmail.com'

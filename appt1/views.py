@@ -30,8 +30,8 @@ def mqtt_receive():
         rpm = data['Rpm']
         gas = data['Gas']
         ar = data['Ar']
-        thedate = data['Data']
-        hora = data['Hora']
+        thedate1 = data['Data']
+        hora1 = data['Hora']
         print("Temperature:", temperature)
         print("Humidity:", humidity)
         print("Pressão:", pressao)
@@ -41,8 +41,8 @@ def mqtt_receive():
         print("Rpm:", rpm)
         print("Gas:", gas)
         print("Ar:", ar)
-        print("Data:", thedate)
-        print("Hora:", hora)
+        print("Data:", thedate1)
+        print("Hora:", hora1)
         myclient = pymongo.MongoClient("mongodb+srv://phpvn:sacul0499@cluster0.u9irlhy.mongodb.net/")
         mydb = myclient["Dados"]
         mycol = mydb["DadosEstacao"]
@@ -52,13 +52,13 @@ def mqtt_receive():
 
         datetime_ist = datetime.now(IST)
              
-        #thedate = datetime_ist.strftime('%d/%m/%Y')
-        #thetime = datetime_ist.strftime('%H:%M:%S')
-        #print(thedate)
-        #print(thetime)
+        thedate = datetime_ist.strftime('%d/%m/%Y')
+        thetime = datetime_ist.strftime('%H:%M:%S')
+        print(thedate)
+        print(thetime)
             
-        #thedate = str(datetime.date.today().day)+'/'+str(datetime.date.today().month)+'/'+str(datetime.date.today().year)
-        #thetime = str(datetime.datetime.now().hour)+':'+str(datetime.datetime.now().minute)+':'+str(datetime.datetime.now().second)
+        thedate = str(datetime.date.today().day)+'/'+str(datetime.date.today().month)+'/'+str(datetime.date.today().year)
+        thetime = str(datetime.datetime.now().hour)+':'+str(datetime.datetime.now().minute)+':'+str(datetime.datetime.now().second)
         mydict = { "Temperatura": temperature,"Umidade": humidity, "Pressão": pressao, "Vento": vento,
                    "Volt":volt,"Luz":luz,"Rpm":rpm,"Gás":gas,"Ar":ar,"Data":thedate,"Hora": hora}
 
@@ -325,3 +325,4 @@ def retornaGraficos(request):
                
         }
     return render(request,'estacao/DataConfirmada.html',context)
+

@@ -10,7 +10,6 @@ import paho.mqtt.client as mqtt
 import json
 import threading
 import datetime
-from datetime import datetime
 import pytz
 
 def mqtt_receive():
@@ -325,4 +324,5 @@ def retornaGraficos(request):
                
         }
     return render(request,'estacao/DataConfirmada.html',context)
+
 

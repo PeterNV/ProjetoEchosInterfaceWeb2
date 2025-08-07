@@ -56,8 +56,8 @@ def mqtt_receive():
         print(thedate)
         print(thetime)
             
-        thedate = str(datetime.date.today().day)+'/'+str(datetime.date.today().month)+'/'+str(datetime.date.today().year)
-        thetime = str(datetime.datetime.now().hour)+':'+str(datetime.datetime.now().minute)+':'+str(datetime.datetime.now().second)
+        #thedate = str(datetime.date.today().day)+'/'+str(datetime.date.today().month)+'/'+str(datetime.date.today().year)
+        #thetime = str(datetime.datetime.now().hour)+':'+str(datetime.datetime.now().minute)+':'+str(datetime.datetime.now().second)
         mydict = { "Temperatura": temperature,"Umidade": humidity, "Pressão": pressao, "Vento": vento,
                    "Volt":volt,"Luz":luz,"Rpm":rpm,"Gás":gas,"Ar":ar,"Data":thedate,"Hora": hora}
 
@@ -324,6 +324,7 @@ def retornaGraficos(request):
                
         }
     return render(request,'estacao/DataConfirmada.html',context)
+
 
 
 

@@ -51,8 +51,9 @@ def mqtt_receive():
 
         datetime_ist = datetime.now(IST)
              
-        thedate = datetime_ist.strftime('%d/%m/%Y')
-        thetime = datetime_ist.strftime('%H:%M:%S')
+        #thedate = datetime_ist.strftime('%d/%m/%Y')
+        thedate = f"{datetime_ist.day}/{datetime_ist.month}/{datetime_ist.year}"
+        #thetime = datetime_ist.strftime('%H:%M:%S')
         print(thedate)
         print(thetime)
             
@@ -324,6 +325,7 @@ def retornaGraficos(request):
                
         }
     return render(request,'estacao/DataConfirmada.html',context)
+
 
 
 

@@ -279,7 +279,7 @@ def retornaGraficos(request):
           
 
            context = {
-              'temperatura': t[-1], 
+               'temperatura': t[-1], 
                'umidade': u[-1], 
                'gas': gas[-1], 
                'qualidade_do_ar': q_ar[-1], 
@@ -287,14 +287,14 @@ def retornaGraficos(request):
                'rpm': rpm[-1],
                'velocidade_do_vento': v_vento[-1],
                'pressao': p[-1],
-               'tempMed':"{:.2f}".format(float(tm/i)),
-               'umidMed':"{:.2f}".format(float(hm/i)),
-               'presMed':"{:.2f}".format(float(pm/i)),
-               'velMed':"{:.2f}".format(float(vm/i)),
-               'luzMed':"{:.2f}".format(float(lm/i)),
-               'rpmMed':"{:.2f}".format(float(rm/i)),
-               'gasMed':"{:.2f}".format(float(gm/i)),
-               'arMed':"{:.2f}".format(float(qm/i)),
+               'tempMed':"{:.2f}".format(sum(t) / len(t)),
+               'umidMed':"{:.2f}".format(sum(u) / len(u)),
+               'presMed':"{:.2f}".format(sum(p) / len(p)),
+               'velMed':"{:.2f}".format(sum(v_vento) / len(v_vento)),
+               'luzMed':"{:.2f}".format(sum(luz) / len(luz)),
+               'rpmMed':"{:.2f}".format(sum(rpm) / len(rpm)),
+               'gasMed':"{:.2f}".format(sum(gas) / len(gas)),
+               'arMed':"{:.2f}".format(sum(q_ar) / len(q_ar)),
                'tempMax':"{:.2f}".format(max(t)),
                'tempMin':"{:.2f}".format(min(t)),
                'humMax':"{:.2f}".format(max(u)),
@@ -325,6 +325,7 @@ def retornaGraficos(request):
                
         }
     return render(request,'estacao/DataConfirmada.html',context)
+
 
 
 

@@ -295,22 +295,22 @@ def retornaGraficos(request):
                'rpmMed':"{:.2f}".format(float(rm/i)),
                'gasMed':"{:.2f}".format(float(gm/i)),
                'arMed':"{:.2f}".format(float(qm/i)),
-               'tempMax':"{:.2f}".format(float(max(tmax))),
-               'tempMin':"{:.2f}".format(float(min(tmin))),
-               'humMax':"{:.2f}".format(float(max(hmax))),
-               'humMin':"{:.2f}".format(float(min(hmin))),
-               'presMax':"{:.2f}".format(float(max(pmax))),
-               'presMin':"{:.2f}".format(float(min(pmin))),
-               'venMax':"{:.2f}".format(float(max(vmax))),
-               'venMin':"{:.2f}".format(float(min(vmin))),
-               'luzMax':"{:.2f}".format(float(max(lmax))),
-               'luzMin':"{:.2f}".format(float(min(lmin))),
-               'rpmMax':"{:.2f}".format(float(max(rmax))),
-               'rpmMin':"{:.2f}".format(float(min(rmin))),
-               'gasMax':"{:.2f}".format(float(max(gmax))),
-               'gasMin':"{:.2f}".format(float(min(gmin))),
-               'qarMax':"{:.2f}".format(float(max(qmax))),
-               'qarMin':"{:.2f}".format(float(min(qmin))),
+               'tempMax':"{:.2f}".format(max(t)),
+               'tempMin':"{:.2f}".format(min(t)),
+               'humMax':"{:.2f}".format(max(u)),
+               'humMin':"{:.2f}".format(min(u)),
+               'presMax':"{:.2f}".format(max(p)),
+               'presMin':"{:.2f}".format(min(p)),
+               'venMax':"{:.2f}".format(max(v_vento)),
+               'venMin':"{:.2f}".format(min(v_vento)),
+               'luzMax':"{:.2f}".format(max(luz)),
+               'luzMin':"{:.2f}".format(min(luz)),
+               'rpmMax':"{:.2f}".format(max(rpm)),
+               'rpmMin':"{:.2f}".format(min(rpm)),
+               'gasMax':"{:.2f}".format(max(gas)),
+               'gasMin':"{:.2f}".format(min(gas)),
+               'qarMax':"{:.2f}".format(max(q_ar)),
+               'qarMin':"{:.2f}".format(min(q_ar)),
                'img_t': img_t,
                'img_u': img_u,
                'img_gas': img_gas,
@@ -325,6 +325,7 @@ def retornaGraficos(request):
                
         }
     return render(request,'estacao/DataConfirmada.html',context)
+
 
 
 

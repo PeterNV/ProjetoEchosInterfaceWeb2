@@ -185,7 +185,7 @@
     </div>
 
     <div class="data-container">
-        <h2>Gás</h2>
+        <h2>Gás (CO)</h2>
 
         <img src="data:image/png;base64,{{ img_gas }}" alt="Gráfico de gás">
 
@@ -193,7 +193,7 @@
 
     <div class="data-container">
 
-        <h2>Qualidade do ar</h2>
+        <h2>Qualidade do ar (LPG)</h2>
         
         <img src="data:image/png;base64,{{ img_ar }}" alt="Gráfico de qualidade do ar">
 
@@ -232,12 +232,13 @@
     <label class="Vm"><img id="VelVIcon"> VELOCIDADE MÉDIA DO VENTO: {{velMed}} km/h. (MIN: {{venMin}} km/h & MAX: {{venMax}} km/h)</label><br><br>
     <label class="Vm"><img id="LuzIcon"> LUZ: {{luzMed}} lux. (MIN: {{luzMin}} lux & MAX: {{luzMax}} lux)</label><br><br>
     <label class="Vm"><img id="RpmIcon"> RPM: {{rpmMed}} rpm. (MIN: {{rpmMin}} rpm & MAX: {{rpmMax}} rpm)</label><br><br>
-    <label class="Vm"><img id="GasIcon"> GÁS: {{gasMed}} ppm. (MIN: {{gasMin}} ppm & MAX: {{gasMax}} ppm)</label><br><br>
-    <label class="Vm"><img id="ArIcon"> QUALIDADE DO AR: {{arMed}} ppm. (MIN: {{qarMin}} ppm & MAX: {{qarMax}} ppm)</label>
+    <label class="Vm"><img id="GasIcon"> GÁS (CO): {{gasMed}} ppm. (MIN: {{gasMin}} ppm & MAX: {{gasMax}} ppm)</label><br><br>
+    <label class="Vm"><img id="ArIcon"> QUALIDADE DO AR (LPG): {{arMed}} ppm. (MIN: {{qarMin}} ppm & MAX: {{qarMax}} ppm)</label>
   </div>
   {% endif %}
     </body>
 
 </html>
+
 
 

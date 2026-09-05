@@ -178,7 +178,7 @@
   }
 
   /* ícones pequenos coloridos (são imagens no template; estilizamos por ID) */
-  #TempIcon, #UmidIcon, #PresIcon, #VelVIcon, #RpmIcon, #LuzIcon, #GasIcon, #ArIcon {
+  #ADCIcon, #PHIcon, #uvIcon, #TensaoIcon,  #TurbidezIcon {
     display:inline-block;
     width:14px;
     height:14px;
@@ -188,14 +188,13 @@
   }
 
   /* mantive suas cores originais, agora com borda sutil */
-  #TempIcon{ background:#e63946; border:1px solid rgba(0,0,0,0.06) }
-  #UmidIcon{ background:#3b82f6; border:1px solid rgba(0,0,0,0.06) }
-  #PresIcon{ background:#7c3aed; border:1px solid rgba(0,0,0,0.06) }
-  #VelVIcon{ background:#111827; border:1px solid rgba(0,0,0,0.06) }
-  #RpmIcon{ background:#111827; border:1px solid rgba(0,0,0,0.06) }
-  #LuzIcon{ background:#facc15; border:1px solid rgba(0,0,0,0.06) }
-  #GasIcon{ background:#6b7280; border:1px solid rgba(0,0,0,0.06) }
-  #ArIcon{ background:#fb923c; border:1px solid rgba(0,0,0,0.06) }
+  #ADCIcon{ background:#e63946; border:1px solid rgba(0,0,0,0.06) }
+  #PHIcon{ background:#3b82f6; border:1px solid rgba(0,0,0,0.06) }
+  #uvIcon{ background:#7c3aed; border:1px solid rgba(0,0,0,0.06) }
+  #TensaoIcon{ background:#111827; border:1px solid rgba(0,0,0,0.06) }
+  
+  #TurbidezIcon{ background:#facc15; border:1px solid rgba(0,0,0,0.06) }
+ 
 
   /* responsividade: valores médios em colunas quando largo */
   @media (min-width:900px){
@@ -246,75 +245,51 @@
       <br>
 
       <div class="data-container">
-        <h2>Temperatura</h2>
-        <img src="data:image/png;base64,{{ img_t }}" alt="Meu Gráfico">
+        <h2>ADC</h2>
+        <img src="data:image/png;base64,{{ img_adc }}" alt="Meu Gráfico">
     </div>
 
      <div class="data-container">
-        <h2>Umidade</h2>
+        <h2>PH</h2>
 
-        <img src="data:image/png;base64,{{ img_u }}" alt="Gráfico de umidade">
-
-    </div>
-
-    <div class="data-container">
-        <h2>Gás (CO)</h2>
-
-        <img src="data:image/png;base64,{{ img_gas }}" alt="Gráfico de gás">
+        <img src="data:image/png;base64,{{ img_ph }}" alt="Gráfico de ph">
 
     </div>
 
     <div class="data-container">
+        <h2>UV</h2>
 
-        <h2>Ar (LPG)</h2>
+        <img src="data:image/png;base64,{{ img_uv }}" alt="Gráfico de uv">
+
+    </div>
+
+    <div class="data-container">
+
+        <h2>Tensão</h2>
         
-        <img src="data:image/png;base64,{{ img_ar }}" alt="Gráfico de qualidade do ar">
+        <img src="data:image/png;base64,{{ img_tensao }}" alt="Gráfico de tensão">
 
     </div>
 
     <div class="data-container">
-        <h2>Intensidade luminosa</h2>
-        <img src="data:image/png;base64,{{ img_luz }}" alt="Gráfico de intensidade luminosa">
+        <h2>Turbidez</h2>
+        <img src="data:image/png;base64,{{ img_turbidez }}" alt="Gráfico de turbidez">
 
     </div>
 
-    <div class="data-container">
-        <h2>RPM anemômetro</h2>
-        <img src="data:image/png;base64,{{ img_rpm }}" alt="Gráfico de rotação do anemometro">
-
-    </div>
-
-    <div class="data-container">
-        <h2>Velocidade do vento</h2>
-        <img src="data:image/png;base64,{{ img_vv }}" alt="Gráfico de velocidade do vento">
-
-    </div>
-
-    <div class="data-container">
-        <h2>Pressão atmosférica</h2>
-        <img src="data:image/png;base64,{{ img_p }}" alt="Gráfico de pressao atmosferica">
-
-    </div>
+    
 
   </div><br>
   <div id="ValoresMedios">
     <br>
-    <label class="Vm"><img id="TempIcon"> TEMPERATURA: {{tempMed}} ºC. (MIN: {{tempMin}} ºC & MAX: {{tempMax}} ºC)</label><br><br>
-    <label class="Vm"><img id="UmidIcon"> UMIDADE: {{umidMed}} %. (MIN: {{humMin}} % & MAX: {{humMax}} %)</label><br><br>
-    <label class="Vm"><img id="PresIcon"> PRESSÃO: {{presMed}} hPa. (MIN: {{presMin}} hPa & MAX: {{presMax}} hPa)</label><br><br>
-    <label class="Vm"><img id="VelVIcon"> VELOCIDADE MÉDIA DO VENTO: {{velMed}} km/h. (MIN: {{venMin}} km/h & MAX: {{venMax}} km/h)</label><br><br>
-    <label class="Vm"><img id="LuzIcon"> LUZ: {{luzMed}} lux. (MIN: {{luzMin}} lux & MAX: {{luzMax}} lux)</label><br><br>
-    <label class="Vm"><img id="RpmIcon"> RPM: {{rpmMed}} rpm. (MIN: {{rpmMin}} rpm & MAX: {{rpmMax}} rpm)</label><br><br>
-    <label class="Vm"><img id="GasIcon"> GÁS (CO): {{gasMed}} ppm. (MIN: {{gasMin}} ppm & MAX: {{gasMax}} ppm)</label><br><br>
-    <label class="Vm"><img id="ArIcon"> QUALIDADE DO AR (LPG): {{arMed}} ppm. (MIN: {{qarMin}} ppm & MAX: {{qarMax}} ppm)</label>
+    <label class="Vm"><img id="ADCIcon"> ADC: {{adcMed}}. (MIN: {{adcMin}} & MAX: {{adcMax}} )</label><br><br>
+    <label class="Vm"><img id="PHIcon"> PH: {{phMed}}. (MIN: {{phMin}} & MAX: {{phMax}})</label><br><br>
+    <label class="Vm"><img id="uvIcon"> UV: {{uvMed}}. (MIN: {{uvMin}} & MAX: {{uvMax}} )</label><br><br>
+    <label class="Vm"><img id="TensaoIcon"> TENSÃO: {{tensaoMed}} V. (MIN: {{tensaoMin}} V & MAX: {{tensaoMax}} V)</label><br><br>
+    <label class="Vm"><img id="TurbidezIcon"> TURBIDEZ: {{turbidezMed}} V. (MIN: {{turbidezMin}} V & MAX: {{turbidezMax}} V)</label><br><br>
+   
   </div>
   {% endif %}
     </body>
 
 </html>
-
-
-
-
-
-

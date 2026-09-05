@@ -151,7 +151,7 @@
               font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
             }
             #DataValida{
-              width:100%;
+                width:100%;
                 max-width:var(--max-width);
                 margin:18px auto;
                 padding:12px 16px;
@@ -165,7 +165,7 @@
                 box-shadow: 0 6px 18px rgba(2,6,23,0.6);
                 display: none;
                 text-align: center;
-                height: 525px;
+                height: 625px;
             }
             #ConfData{
               border-radius: 25em;
@@ -179,6 +179,7 @@
               color: gray;
               font-weight: bold;
             }
+            
             #CanceData{
                color: #777;
                 border: 5px solid white;
@@ -277,7 +278,21 @@
             #SlecData{
               text-align: center;
               height: 65px;
-              width: 215px;
+              width: 225px;
+              color: black;
+              background-color: rgb(199, 199, 199);
+              margin-left: auto;
+              margin-right: auto;
+              font-weight: bold;
+              border-color: transparent;
+              border-radius: 25em;
+              
+            }
+            
+            #SlecEst{
+              text-align: center;
+              height: 65px;
+              width: 225px;
               color: black;
               background-color: rgb(199, 199, 199);
               margin-left: auto;
@@ -332,11 +347,11 @@
           border-right-color: transparent;
           text-align: center;
         }
+       
         #DI{
           scale: 0.88;
         }
-         
-      
+        
         .nav-actions{display:flex;gap:8px;align-items:center}
          @media (max-width: 900px){
       
@@ -360,7 +375,32 @@
         border-radius: 1em;
         
       }
-     
+     #EstUm{
+      display: none;
+     }
+    #LoadCircle{
+      height: 125px;
+      width: 125px;
+      background-color: transparent;
+      border: 6px solid white;
+      border-top-color: yellowgreen;
+      border-radius: 50%;
+      animation: loading_circle 2s linear infinite;
+      filter: drop-shadow(1px 1px 1px gray);
+      display: none;
+    }
+    #AguardeLoading{
+      color: white;
+      font-weight: bold;
+      font-size: 25px;
+      filter: drop-shadow(1px 1px 1px gray);
+      display: none;
+    }
+    @keyframes loading_circle {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+      
+    }
     </style>
   </head>
   <body >
@@ -404,30 +444,40 @@
     <div class="container"  >
      
       <div id="DataValida">
-        <br>
         
+        <img id="LoadCircle" ><br><br>
+        <h1 id="AguardeLoading">AGUARDE...</h1><br>
         <form action="{% url 'dados_estacao' %}" method="get">
           <fieldset>
           {% csrf_token %}
-          <h1 id="SUDPVVM"><button id="CanceData" type="reset" onclick="CancelaData()">X</button> SELECIONE UMA DATA: </h1><br>
+          <h1 id="SUDPVVM"><button id="CanceData" type="reset" onclick="CancelaData()">X</button> VEJA OS DADOS JÁ REGISTRADOS </h1><br>
           
-            <select name="datadados" id="SlecData" onclick="DataInvalida()"  >
-              <option class="datas">SELECIONE UMA DATA</option>
-            
-              {% for x in Data %}
-              
-              <option class="datas" id="DatasCompleta">{{x}}</option>
-              
-              {% endfor %}
-            </select><br><br>
-            <input id="TheDataInput"  type="text" onkeypress="DataInput()" onkeyup="DataInput()" onkeydown="DataInput()" placeholder="DD/MM/AAAA"><br>
-            <label id="DI"></label>
-           <button id="ConfData" type="submit" disabled onclick="LerGraficos()">CONFIRMAR</button><br><br>
-          </fieldset>
-        </form><br>
-    
+          <select name="estdados" id="SlecEst" onchange="EscoEst()">
+            <option class="EstName">SELECIONE UMA ESTAÇÃO</option>
+            <option class="EstName">EST-0001</option>
+            <option class="EstName">EST-0002</option>
+            <option class="EstName">EST-0003</option>
+            <option class="EstName">BOIA-0001</option>
+            <option class="EstName">BOIA-0002</option>
+            <option class="EstName">BOIA-0003</option>
+          </select><br><br>
+          <div id="EstUm">
+              <select name="datadados" id="SlecData" onclick="DataInvalida()"  >
+                
+                <option class="datas">SELECIONE UMA DATA</option>
+                  
+              </select><br><br>
+              <input id="TheDataInput"  type="text" onkeypress="DataInput()" onkeyup="DataInput()" onkeydown="DataInput()" placeholder="DD/MM/AAAA"><br>
+              <label id="DI"></label>
+              <button id="ConfData" type="submit" disabled >CONFIRMAR</button><br><br>
+            </div>
+
+  
+        </fieldset>
+      </form>
     </div>
     </div>
+
     <div class="container" id="TelaInicio">
       <h1 id="bemvindo">Bem-vindo</h1>
       <p id="ParagrafoTelaInicio">Aqui você vai encontrar a explicação completa a respeito do projeto morhinga, 
@@ -444,12 +494,81 @@
         <a href="https://www.facebook.com/IFPEoficial/?locale=pt_BR" target="_blank" class="MidiaSocial"><i class="fa fa-facebook-f"></i></a>
         <a href="https://www.instagram.com/gpadsrecife/" target="_blank" class="MidiaSocial"><i class="fa fa-instagram"></i></a>
       </div>
-      
     </nav>
     
-  
    <script>
-    
+   
+      
+    function EscoEst(){
+      document.getElementById("EstUm").style.display = "none";
+      document.getElementById("SUDPVVM").style.display = "none";
+      var selec = document.getElementsByClassName("EstName");
+      var x = document.getElementById("SlecData");
+      //var remove = document.createElement("option");
+      //x.remove(0);
+      var datasAdicionadas = document.getElementsByClassName("datasadd");
+      for(var i = datasAdicionadas.length - 1; i >= 0; i--){
+        datasAdicionadas[i].remove();
+      }
+        if(selec[0].selected == true){
+          document.getElementById("EstUm").style.display = "none";
+        }
+        document.getElementById("SlecEst").style.display = "none";
+      
+        document.getElementById("AguardeLoading").style.display = "block";
+        document.getElementById("LoadCircle").style.display = "inline-block";
+         var resp = "";
+      
+        const reqResp = new XMLHttpRequest();
+        reqResp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            const novaResp = reqResp.responseText;
+            console.log(novaResp);
+            const data = JSON.parse(novaResp.toString());
+            if (novaResp !== resp) {
+              // Atualiza textos
+              console.log(data["datas"]);
+              if(data["datas"].length == 0){
+                const dne = document.createElement("option");
+                dne.className = "datasadd";
+                dne.text = "Dados não encontrados";
+                x.add(dne); 
+              }else{
+                for(const datas of data["datas"]){
+                  const option = document.createElement("option");
+                    option.className = "datasadd";
+                    option.value = datas;
+                    option.textContent = datas;
+                    console.log(datas);
+                    x.appendChild(option);  
+                    
+                }
+                
+              }
+              document.getElementById("EstUm").style.display = "block";
+              document.getElementById("SlecEst").style.display = "block";
+              document.getElementById("AguardeLoading").style.display = "none";
+              document.getElementById("LoadCircle").style.display = "none";
+              document.getElementById("SUDPVVM").style.display = "block";
+            }
+          }
+        };
+       var estacao = "";
+        for(var i = 0; i < selec.length; i++){
+          if(selec[i].selected == true){
+            estacao = String(selec[i].value).replace("-", "").toLowerCase()
+          }
+        }
+        
+        reqResp.open('GET', '/get_dados_armazenados/?estname=' + estacao, true);
+        //reqResp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+          
+        console.log(estacao);
+            
+        reqResp.send();
+          
+    }
+
    function DataInput(){
     var seleData = document.getElementsByClassName("datas");
     var re = document.getElementById("TheDataInput").value;
@@ -604,7 +723,7 @@
     document.getElementById("TelaInicio").style.display = "block";
     document.getElementById("medidores").style.display = "none";
     document.getElementById("DefinicaoDoEchos").style.display = "none";
-   
+    document.getElementById("EstUm").style.display = "none";
    }
    function FechaADef(){
     document.getElementById("DataValida").style.display = "none";
@@ -637,7 +756,7 @@
     }
    
        
-
+mapboxgl.accessToken = 'pk.eyJ1IjoiemV5bW9zZ2VucyIsImEiOiJjbXBkMTRmeWQwN2gyMnJvZ2ttbDdwZ2k1In0.axiFrjP6iCF2977ghB8ocg';
 const map = new mapboxgl.Map({
     container: 'map',
 
@@ -692,8 +811,69 @@ map.on('load', () => {
     )
 
     .addTo(map);
+    new mapboxgl.Marker({
+        color: '#ff0000'
+    })
 
+    .setLngLat([
+        -38.2963,
+        -7.9880
+    ])
 
+    .setPopup(
+        new mapboxgl.Popup({
+            maxWidth: '500px'
+        })
+        .setHTML(`
+            
+             <iframe
+        src="{% static 'homeestdois.html' %}"  // Ajuste a URL
+        width="100%"
+        height="100%"
+        style="
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+        ">
+    </iframe>
+        `)
+    )
+
+    .addTo(map);
+
+    new mapboxgl.Marker({
+        color: '#ff0000'
+    })
+
+    .setLngLat([
+        -36.49660,
+        -8.88243
+    ])
+
+    .setPopup(
+        new mapboxgl.Popup({
+            maxWidth: '500px'
+        })
+        .setHTML(`
+            
+             <iframe
+        src="{% static 'homeesttres.html' %}"  // Ajuste a URL
+        width="100%"
+        height="100%"
+        style="
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+        ">
+    </iframe>
+        `)
+    )
+
+    .addTo(map);
     // ==========================================
     // 🌍 TERRENO 3D
     // ==========================================

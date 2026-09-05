@@ -3,7 +3,7 @@ from django.db import models
 
 class RGraficos(models.Model):
     datae = models.TextField(max_length=255)
-    
+    estname = models.TextField(max_length=255)
 class novos_valores(models.Model):
     temp = models.TextField(max_length=255,default='SOME STRING')
     hum = models.TextField(max_length=255,default='SOME STRING')

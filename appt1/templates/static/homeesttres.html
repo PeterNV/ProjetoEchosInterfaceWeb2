@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://res.cloudinary.com/dqamnqm4q/image/upload/v1776807436/ECHOS_ICON_ee7zpj.jpg" sizes="42x42" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js"></script>
+    <title>ESTAÇÃO MORHINGA</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(145deg, #0a0e1a 0%, #141b2b 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+      }
+
+      #medidores {
+        background: rgba(15, 23, 42, 0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 16px;
+        padding: 16px 14px 20px;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.06);
+        margin: 0 auto;
+        overflow: hidden;
+      }
+
+      .header-estacao {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 4px 12px 4px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        margin-bottom: 14px;
+      }
+
+      .header-estacao h3 {
+        color: #e8edf5;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+
+      .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #2ecc71;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: pulse-dot 2s infinite;
+        box-shadow: 0 0 12px rgba(46, 204, 113, 0.4);
+      }
+
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.85); }
+      }
+
+      .meters-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 0;
+      }
+
+      .meter {
+        background: rgba(255,255,255,0.03);
+        border-radius: 12px;
+        padding: 8px 6px 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border: 1px solid rgba(255,255,255,0.04);
+        transition: all 0.3s ease;
+        min-height: 100px;
+      }
+
+      .meter:hover {
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.08);
+      }
+
+      .meter svg {
+        width: 100%;
+        max-width: 100px;
+        height: auto;
+        display: block;
+      }
+
+      .meter svg circle {
+        transform-origin: center;
+      }
+
+      .MedidorEM {
+        fill: none;
+        stroke: rgba(255,255,255,0.08);
+        stroke-width: 8;
+        stroke-linecap: round;
+      }
+
+      .MedidorEM2 {
+        fill: none;
+        stroke-width: 8;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 0 6px rgba(100, 200, 255, 0.15));
+      }
+
+      /* Cores individuais para cada medidor */
+      .meter:nth-child(1) .MedidorEM2 { stroke: #ff6b6b; } /* Temperatura */
+      .meter:nth-child(2) .MedidorEM2 { stroke: #4ecdc4; } /* Umidade */
+      .meter:nth-child(3) .MedidorEM2 { stroke: #ffe66d; } /* Luz */
+      .meter:nth-child(4) .MedidorEM2 { stroke: #a29bfe; } /* Pressão */
+      .meter:nth-child(5) .MedidorEM2 { stroke: #fd79a8; } /* Gás */
+      .meter:nth-child(6) .MedidorEM2 { stroke: #55efc4; } /* RPM */
+      .meter:nth-child(7) .MedidorEM2 { stroke: #74b9ff; } /* Vento */
+      .meter:nth-child(8) .MedidorEM2 { stroke: #fdcb6e; } /* Ar */
+      .meter:nth-child(9) .MedidorEM2 { stroke: #6c5ce7; } /* Chuva */
+
+      .MedidorV {
+        color: #e8edf5;
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 2px;
+        letter-spacing: 0.3px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        background: rgba(0,0,0,0.3);
+        padding: 2px 10px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.06);
+        backdrop-filter: blur(4px);
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        min-width: 60px;
+        text-align: center;
+      }
+
+      /* Versão mobile - 2 colunas */
+      @media (max-width: 600px) {
+        .meters-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 6px;
+        }
+        
+        .meter svg {
+          max-width: 80px;
+        }
+        
+        .MedidorV {
+          font-size: 11px;
+          min-width: 50px;
+          padding: 1px 8px;
+        }
+        
+        .header-estacao h3 {
+          font-size: 13px;
+        }
+        
+        #medidores {
+          padding: 12px 10px 16px;
+        }
+      }
+
+      /* Para telas muito pequenas */
+      @media (max-width: 400px) {
+        .meters-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 4px;
+        }
+        
+        .meter svg {
+          max-width: 65px;
+        }
+        
+        .MedidorV {
+          font-size: 10px;
+          min-width: 40px;
+          padding: 1px 6px;
+        }
+      }
+
+      /* Scroll suave */
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.02);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="medidores">
+      <div class="header-estacao">
+        <h3>
+          <span class="status-dot"></span>
+          MORHINGA • EST-0003
+        </h3>
+        <span style="color: #5a6a7e; font-size: 11px; font-weight: 500; letter-spacing: 0.5px;">
+          <i class="fa fa-wifi" style="color: #2ecc71; margin-right: 4px;"></i>
+          LIVE
+        </span>
+      </div>
+
+      <div class="meters-grid">
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaTemperaturaDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="temperatura">25ºC</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaUmidadeDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="umidade">100%</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaLuzDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="luz">2500lx</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaPressaoDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="pressao">11010hPa</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaGasDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="gas">10000ppm</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaRpmDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="rpm">60rpm</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaVentoDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="vento">120km/h</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaArDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="ar">500ppm</label>
+        </div>
+
+        <div class="meter">
+          <svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid meet">
+            <circle class="MedidorEM" cx="100" cy="90" r="65"></circle>
+            <circle id="CirculoDaChuvaDois" class="MedidorEM2" cx="100" cy="90" r="65" stroke-dasharray="408" stroke-dashoffset="408"></circle>
+          </svg>
+          <label class="MedidorV" id="chuva">0.25mm</label>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      var resp = "";
+      setInterval(function () {
+        const reqResp = new XMLHttpRequest();
+        reqResp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            const novaResp = reqResp.responseText;
+            const data = JSON.parse(novaResp.toString());
+            if (novaResp !== resp) {
+              // Atualiza textos
+              document.getElementById("temperatura").innerHTML = parseInt(data.t) + "ºC";
+              document.getElementById("umidade").innerHTML = parseInt(data.u) + "%";
+              document.getElementById("pressao").innerHTML = parseInt(data.p) + "hPa";
+              document.getElementById("luz").innerHTML = parseInt(data.lz) + "lux";
+              document.getElementById("gas").innerHTML = parseInt(data.g) + "ppm";
+              document.getElementById("rpm").innerHTML = parseInt(data.r) + "rpm";
+              document.getElementById("vento").innerHTML = parseInt(data.v) + "km/h";
+              document.getElementById("ar").innerHTML = parseInt(data.a) + "ppm";
+              document.getElementById("chuva").innerHTML = parseInt(data.c) + "mm";
+
+              // Atualiza círculos com circunferência 408 (2 * PI * 65 ≈ 408.4)
+              const circunferencia = 408;
+              document.getElementById("CirculoDaTemperaturaDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.t) / 80) * circunferencia) + "px";
+              document.getElementById("CirculoDaUmidadeDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.u) / 100) * circunferencia) + "px";
+              document.getElementById("CirculoDaPressaoDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.p) / 1100) * circunferencia) + "px";
+              document.getElementById("CirculoDaGasDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.g) / 10000) * circunferencia) + "px";
+              document.getElementById("CirculoDaRpmDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.r) / 10000) * circunferencia) + "px";
+              document.getElementById("CirculoDaVentoDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.v) / 140) * circunferencia) + "px";
+              document.getElementById("CirculoDaArDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.a) / 1000) * circunferencia) + "px";
+              document.getElementById("CirculoDaLuzDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.lz) / 65535) * circunferencia) + "px";
+              document.getElementById("CirculoDaChuvaDois").style.strokeDashoffset = 
+                (circunferencia - (parseInt(data.c) / 100) * circunferencia) + "px";
+            }
+          }
+        };
+        reqResp.open('GET', '/get_dados_tres/', true);
+        reqResp.send();
+      }, 1000);
+    </script>
+  </body>
+</html>

@@ -235,7 +235,7 @@
     {% if DataInvalida == False and DataValida == True %}
     <br>
     <div id="DadosAab" class="container"> 
-      <h1 id="AEVMEDS">ABAIXO ESTÃO OS DADOS DA ESTAÇÃO NA DATA {{ datacompleta }}. 
+      <h1 id="AEVMEDS">ABAIXO ESTÃO OS DADOS DA ESTAÇÃO NA DATA {{ datacompleta }} ATÉ A DATA {{ datafinal }}. 
     
          {% csrf_token %}
             <a href="{% url 'home' %}" id="VoltarBotao">VOLTAR</a>
@@ -286,7 +286,7 @@
     <label class="Vm"><img id="PHIcon"> PH: {{phMed}}. (MIN: {{phMin}} & MAX: {{phMax}})</label><br><br>
     <label class="Vm"><img id="uvIcon"> UV: {{uvMed}}. (MIN: {{uvMin}} & MAX: {{uvMax}} )</label><br><br>
     <label class="Vm"><img id="TensaoIcon"> TENSÃO: {{tensaoMed}} V. (MIN: {{tensaoMin}} V & MAX: {{tensaoMax}} V)</label><br><br>
-    <label class="Vm"><img id="TurbidezIcon"> TURBIDEZ: {{turbidezMed}} V. (MIN: {{turbidezMin}} V & MAX: {{turbidezMax}} V)</label><br><br>
+    <label class="Vm"><img id="TurbidezIcon"> TURBIDEZ: {{turbidezMed}} NTU. (MIN: {{turbidezMin}} NTU & MAX: {{turbidezMax}} NTU)</label><br><br>
    
   </div>
   {% endif %}

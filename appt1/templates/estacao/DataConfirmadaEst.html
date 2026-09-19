@@ -236,7 +236,7 @@
     {% if DataInvalida == False and DataValida == True %}
     <br>
     <div id="DadosAab" class="container"> 
-      <h1 id="AEVMEDS">ABAIXO ESTÃO OS DADOS DA ESTAÇÃO NA DATA {{ datacompleta }}. 
+      <h1 id="AEVMEDS">ABAIXO ESTÃO OS DADOS DA ESTAÇÃO NA DATA {{ datacompleta }} ATÉ A DATA {{ datafinal }}. 
     
          {% csrf_token %}
             <a href="{% url 'home' %}" id="VoltarBotao">VOLTAR</a>

@@ -10,7 +10,7 @@ import paho.mqtt.client as mqtt
 import json
 import threading
 from datetime import datetime
-import pytz
+import pandas as pd
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -282,7 +282,7 @@ def get_dados_armazenados(request):
                                 "datas": "Dados não encontrados"
                         }
     allData = []
-    saveIndex = []
+    saveIndex = []  
     allIndex = 0
     data = request.GET.get('estname')
     print("Data recebida: ", data)     
@@ -320,12 +320,23 @@ def get_dados_armazenados(request):
                                 "datas": ""
                             }   
                     for data in sorted(datas_unicas):
-                    
+
                             allIndex += 1
-                            allData.append(data)
+                            allData.append(str(data).replace("/"," "))
                             saveIndex.append(allIndex)
+
+                    s1 = pd.Series(allData)
+                    
+                                        # Convert the strings to datetime objects and sort
+                    s2 = s1.apply(pd.to_datetime, format='%d %m %Y').sort_values()
+                    
+                                        # Convert sorted datetime objects back to the string format
+                    s3 = s2.apply(lambda x: f"{x.day} {x.month} {x.year}").tolist()
+                    datasCompleta = []
+                    for do in s3:
+                                             datasCompleta.append(str(do).replace(" ", "/"))
                     DADOS_ARMAZENADOS = {
-                        "datas": allData
+                        "datas": datasCompleta
                     }
     
     return JsonResponse(DADOS_ARMAZENADOS)
@@ -362,8 +373,10 @@ def retornaGraficos(request):
     retornaEstacao = False
     ExibeGrafico = RGraficos()
     ExibeGrafico.datae = request.GET.get('datadados')
+    ExibeGrafico.dataedois = request.GET.get('datadadosdois')
     ExibeGrafico.estname = str(request.GET.get('estdados')).replace("-", "").lower()
     datacompleta = ExibeGrafico.datae
+    dataFinal = ExibeGrafico.dataedois
     print("Data recebida: ", datacompleta)
     print("Estação recebida: ", ExibeGrafico.estname) 
     if str(ExibeGrafico.estname).startswith("est") == True:
@@ -401,32 +414,39 @@ def retornaGraficos(request):
     i = 0
     adc , ph, uv, tens, turb = [], [], [], [], []
     encontrou_dados = False
+    
     if retornaEstacao == True and retornaBoia == False:
+        coletandoValores1 = False
         for chave, valor in dados.items():
 
             if not isinstance(valor, dict):
                 continue
 
             if str(valor.get("Data", "")) == datacompleta:
-
+                coletandoValores1 = True
                 encontrou_dados = True
 
-                i += 1
-                leitura.append(i)
-
-                try:
                 
 
-                    t.append(float(valor.get("Temperatura", 0)))
-                    u.append(float(valor.get("Umidade", 0)))
-                    p.append(float(valor.get("Pressao", 0)))
-                    v_vento.append(float(valor.get("Vento", 0)))
-                    luz.append(float(valor.get("Luz", 0)))
-                    rpm.append(float(valor.get("Rpm", 0)))
-                    gas.append(float(valor.get("Gas", 0)))
-                    q_ar.append(float(valor.get("Ar", 0)))
-                except:
-                    pass
+                
+            if coletandoValores1 == True:
+                print(valor.get("Data",""))
+                dataAtual = datetime.strptime(valor.get("Data",""), "%d/%m/%Y")
+                dataFinalDT = datetime.strptime(dataFinal, "%d/%m/%Y")
+                if dataAtual <= dataFinalDT:
+                            i += 1
+                            leitura.append(i)
+                            t.append(float(valor.get("Temperatura", 0)))
+                            u.append(float(valor.get("Umidade", 0)))
+                            p.append(float(valor.get("Pressao", 0)))
+                            v_vento.append(float(valor.get("Vento", 0)))
+                            luz.append(float(valor.get("Luz", 0)))
+                            rpm.append(float(valor.get("Rpm", 0)))
+                            gas.append(float(valor.get("Gas", 0)))
+                            q_ar.append(float(valor.get("Ar", 0)))
+                else:
+                            break
+                
 
         if not encontrou_dados or not t:
             
@@ -492,34 +512,38 @@ def retornaGraficos(request):
             'img_vv': img_vv,
             'DataInvalida': False,
             'DataValida': True,
-            'datacompleta': datacompleta
+            'datacompleta': datacompleta,
+            'datafinal': dataFinal
         }
 
         return render(request, 'estacao/DataConfirmadaEst.html', context)
     if retornaEstacao == False and retornaBoia == True:
-          for chave, valor in dados.items():
-          
-                      if not isinstance(valor, dict):
-                          continue
+          coletandoValores2 = False
+          for chave, valor in dados.items():    
           
                       if str(valor.get("Data", "")) == datacompleta:
-          
-                          encontrou_dados = True
-          
-                          i += 1
-                          leitura.append(i)
-          
-                          try:
+                                      coletandoValores2 = True
+                                      encontrou_dados = True
+                      
+                                     
+                      
+                                      
+                      if coletandoValores2 == True:
+                        print(valor.get("Data",""))
+                        dataAtual = datetime.strptime(valor.get("Data",""), "%d/%m/%Y")
+                        dataFinalDT = datetime.strptime(dataFinal, "%d/%m/%Y")
+                        if dataAtual <= dataFinalDT:
+                            i += 1
+                            leitura.append(i)
+                            adc.append(float(valor.get("ADC", 0)))
+                            ph.append(float(valor.get("Ph", 0)))
+                            uv.append(float(valor.get("Sensor UV(V)", 0)))
+                            tens.append(float(valor.get("Tensão(V)", 0)))
+                            turb.append(float(valor.get("Turbidez(V)", 0)))
+                        else:
+                            break
+                        
                           
-          
-                              adc.append(float(valor.get("ADC", 0)))
-                              ph.append(float(valor.get("Ph", 0)))
-                              uv.append(float(valor.get("Sensor UV(V)", 0)))
-                              tens.append(float(valor.get("Tensão(V)", 0)))
-                              turb.append(float(valor.get("Turbidez(V)", 0)))
-                              
-                          except:
-                              pass
           
           if not encontrou_dados or not adc:
                        
@@ -527,7 +551,7 @@ def retornaGraficos(request):
                                         'DataInvalida': True,
                                         'DataValida': False
                         })
-                       
+                    
           img_adc = cria_grafico(leitura, adc, 'red')
           img_ph = cria_grafico(leitura, ph, 'blue')
           img_uv = cria_grafico(leitura, uv, 'purple')
@@ -572,7 +596,8 @@ def retornaGraficos(request):
                        
                         'DataInvalida': False,
                         'DataValida': True,
-                        'datacompleta': datacompleta
+                        'datacompleta': datacompleta,
+                        'datafinal': dataFinal
                     }
             
           return render(request, 'estacao/DataConfirmadaBoia.html', context)

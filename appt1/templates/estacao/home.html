@@ -165,7 +165,7 @@
                 box-shadow: 0 6px 18px rgba(2,6,23,0.6);
                 display: none;
                 text-align: center;
-                height: 625px;
+                height: 725px;
             }
             #ConfData{
               border-radius: 25em;
@@ -288,7 +288,19 @@
               border-radius: 25em;
               
             }
-            
+            #SlecDataDois{
+              text-align: center;
+              height: 65px;
+              width: 225px;
+              color: black;
+              background-color: rgb(199, 199, 199);
+              margin-left: auto;
+              margin-right: auto;
+              font-weight: bold;
+              border-color: transparent;
+              border-radius: 25em;
+              
+            }
             #SlecEst{
               text-align: center;
               height: 65px;
@@ -337,20 +349,9 @@
               border: 2px solid gray;
             }
         
-        #TheDataInput{
-          background-color: rgb(194, 194, 194);
-          color: black;
-          font-weight: bold;
-          border-radius: 0%;
-          border-top-color: transparent;
-          border-left-color: transparent;
-          border-right-color: transparent;
-          text-align: center;
-        }
        
-        #DI{
-          scale: 0.88;
-        }
+       
+        
         
         .nav-actions{display:flex;gap:8px;align-items:center}
          @media (max-width: 900px){
@@ -463,13 +464,17 @@
             <option class="EstName">BOIA-0003</option>
           </select><br><br>
           <div id="EstUm">
-              <select name="datadados" id="SlecData" onclick="DataInvalida()"  >
+              <select name="datadados" id="SlecData" onclick="LiberaDataDois()"  >
                 
-                <option class="datas">SELECIONE UMA DATA</option>
+                <option class="datas">SELECIONE A DATA 1</option>
                   
               </select><br><br>
-              <input id="TheDataInput"  type="text" onkeypress="DataInput()" onkeyup="DataInput()" onkeydown="DataInput()" placeholder="DD/MM/AAAA"><br>
-              <label id="DI"></label>
+              <select name="datadadosdois" id="SlecDataDois" onclick="ConfirmaData()"  disabled>
+                
+                <option class="datasdois">SELECIONE A DATA 2</option>
+                  
+              </select><br><br>
+              
               <button id="ConfData" type="submit" disabled >CONFIRMAR</button><br><br>
             </div>
 
@@ -498,13 +503,46 @@
     </nav>
     
    <script>
-   
+    var removerSelecionados = 0;
+   function LiberaDataDois(){
+    
+    var selecionaDatasUm = document.getElementsByClassName("datasadd");
+    var selecionaDatasDois = document.getElementById("SlecDataDois");
+    var DataDois = false;
+    var datasAdicionadasDois = document.getElementsByClassName("datasaddois");
+    for(var ii = datasAdicionadasDois.length - 1; ii >= 0; ii--){
+        datasAdicionadasDois[ii].remove();
+    }
+    for(var i = 0; i < selecionaDatasUm.length; i++){
+      if(selecionaDatasUm[i].selected == true){
+        console.log(i);
+        removerSelecionados = i;
+        DataDois = true;
+      }
+    }
+     document.getElementById("SlecDataDois").disabled = false;
+     if(DataDois == true){
+      for(var r = removerSelecionados+1; r < selecionaDatasUm.length; r++){
+        const optionDois = document.createElement("option");
+        console.log(selecionaDatasUm[r].value);
+        optionDois.className = "datasaddois";
+        optionDois.value = selecionaDatasUm[r].value;
+        optionDois.textContent = selecionaDatasUm[r].value;
+        selecionaDatasDois.append(optionDois);
+        
+      }
+      DataDois = false;
+     }
+
+     //document.getElementById("SlecData").disabled = true;
+   }
       
     function EscoEst(){
       document.getElementById("EstUm").style.display = "none";
       document.getElementById("SUDPVVM").style.display = "none";
       var selec = document.getElementsByClassName("EstName");
-      var x = document.getElementById("SlecData");
+      var datasum = document.getElementById("SlecData");
+      var datasdois = document.getElementById("SlecDataDois");
       //var remove = document.createElement("option");
       //x.remove(0);
       var datasAdicionadas = document.getElementsByClassName("datasadd");
@@ -533,16 +571,22 @@
                 const dne = document.createElement("option");
                 dne.className = "datasadd";
                 dne.text = "Dados não encontrados";
-                x.add(dne); 
+                datasum.add(dne); 
+                datasdois.add(dne);
               }else{
                 for(const datas of data["datas"]){
                   const option = document.createElement("option");
+                  //const optionDois = document.createElement("option");
                     option.className = "datasadd";
                     option.value = datas;
                     option.textContent = datas;
+
+                    //optionDois.className = "datasaddois";
+                    //optionDois.value = datas;
+                    //optionDois.textContent = datas;
                     console.log(datas);
-                    x.appendChild(option);  
-                    
+                    datasum.appendChild(option);  
+                    //datasdois.appendChild(optionDois);
                 }
                 
               }
@@ -570,108 +614,14 @@
           
     }
 
-   function DataInput(){
-    var seleData = document.getElementsByClassName("datas");
-    var re = document.getElementById("TheDataInput").value;
-    for(var i =65; i < 91;i++){
-      
-      String.fromCharCode(i);
-      console.log(String.fromCharCode(i));
-      if(document.getElementById("TheDataInput").value == String.fromCharCode(i)){
-        document.getElementById("TheDataInput").value = null;
-      }
-     
-    }
-    for(var i =97; i < 123;i++){
-      
-      String.fromCharCode(i);
-      console.log(String.fromCharCode(i));
-    
-      if(document.getElementById("TheDataInput").value == String.fromCharCode(i)){
-        document.getElementById("TheDataInput").value = null;
-      } 
-    }
-    for(var i =32; i < 47;i++){
-      
-      String.fromCharCode(i);
-      console.log(String.fromCharCode(i));
-    
-      if(document.getElementById("TheDataInput").value == String.fromCharCode(i)){
-        document.getElementById("TheDataInput").value = null;
-      } 
-    }
-    for(var i =58; i < 65;i++){
-      
-      String.fromCharCode(i);
-      console.log(String.fromCharCode(i));
-    
-      if(document.getElementById("TheDataInput").value == String.fromCharCode(i)){
-        document.getElementById("TheDataInput").value = null;
-      } 
-    }
-    for(var i =91; i < 97;i++){
-      
-      String.fromCharCode(i);
-      console.log(String.fromCharCode(i));
-    
-      if(document.getElementById("TheDataInput").value == String.fromCharCode(i)){
-        document.getElementById("TheDataInput").value = null;
-      } 
-    }
-    for(var i =123; i < 127;i++){
-      
-      String.fromCharCode(i);
-      console.log(String.fromCharCode(i));
-    
-      if(document.getElementById("TheDataInput").value == String.fromCharCode(i)){
-        document.getElementById("TheDataInput").value = null;
-      } 
-    }
-    if(document.getElementById("TheDataInput").value[0] == "/"){
-      document.getElementById("TheDataInput").value = null;
-    }
-    if(document.getElementById("TheDataInput").value[0] == "´"){
-      document.getElementById("TheDataInput").value = null;
-    }
-    const datah = new Date();
-    var now = datah.getDate()+"/"+parseInt(datah.getMonth()+1)+"/"+datah.getFullYear();
-    if(re == now){
-        document.getElementById("DI").innerHTML = "Não é permitido selecionar a data de hoje, por favor selecione outra data, ou tente novamente amanhã.";
-        document.getElementById("ConfData").disabled = true;
-        document.getElementById("ConfData").style.opacity = "0.5";
-    }else{
-      document.getElementById("DI").innerHTML = "";
-    }
-    var selc = false;
-    for(var i = 0; i < seleData.length;i++){
-      
-      if(re == seleData[i].innerHTML ){
-        console.log("Data encontrada.");
-        seleData[i].selected = true;
-        seleData[0].selected = false;
-      }
-      if(re == ""){
-        seleData[0].selected = true;
-      }
-      if(seleData[0].selected == true){
-        document.getElementById("ConfData").disabled = true;
-          document.getElementById("ConfData").style.opacity = "0.5";
-          
-      }else{
-        document.getElementById("ConfData").disabled = false;
-          document.getElementById("ConfData").style.opacity = "1";
-      }
-    }
-
-    
-   } 
-
+ 
+/*
    function DataInvalida(){
     
     const datah = new Date();
     var now = datah.getDate()+"/"+parseInt(datah.getMonth()+1)+"/"+datah.getFullYear();
     var selecData = document.getElementsByClassName("datas");
-    console.log(now);
+    //console.log(now);
     
     for(var i = 0; i < selecData.length;i++){
       if(selecData[0].selected == true){
@@ -693,6 +643,11 @@
     }
     
    } 
+    */
+   function ConfirmaData(){
+    document.getElementById("ConfData").disabled = false;
+    document.getElementById("ConfData").style.opacity = "1.0";
+   }
    function MostrarGraficosJR(){
     document.getElementById("DataValida").style.display = "block";
     document.getElementById("TelaInicio").style.display = "none";
@@ -719,7 +674,7 @@
 
    }
   function CancelaData(){
-    document.getElementById("DI").innerHTML = "";
+    
     document.getElementById("DataValida").style.display = "none";
     document.getElementById("TelaInicio").style.display = "block";
     document.getElementById("medidores").style.display = "none";
